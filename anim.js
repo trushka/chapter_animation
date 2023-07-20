@@ -54,7 +54,7 @@ requestAnimationFrame(function anim(t) {
 
 	if (!current[0]) return;
 	let {top, bottom} = current[0].getBoundingClientRect();
-	targTop = scrEl.scrollTop = cont.scrollTop + (dGlobal >= 0? top : bottom - innerHeight);
+	targTop = scrEl.scrollTop = cont.scrollTop + (dGlobal >= 0? top : bottom - innerHeight*1.5);
 	console.log(dGlobal);
 
 	chAnim(current);

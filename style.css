@@ -32,13 +32,13 @@ nav ul li:not(:first-child){
 
 
 .section{
-	position: relative;
+	/* position: relative; */
 	width: 100%;
 	height: auto;
 	padding-top: 100px;
-	overflow: hidden;
+	/* overflow: hidden; */
 	outline: 1px solid;
-	transition: .6s;  
+	transition: .6s;
 }
 .section.hidden {
 	opacity: 0;
@@ -59,7 +59,7 @@ nav ul li:not(:first-child){
 	background: #4CE675;
 }
 .section__wrapp{
-	height: 1000px;
+	min-height: 200vh;
 }
 h1{
 	margin:0;
@@ -70,6 +70,12 @@ h2{
 	margin: 0;
 	font-size: 50px;
 	text-transform: uppercase;
+}
+.section__wrapp h2{
+	position: sticky;
+	top: calc(50% - .5em);
+	margin-bottom: calc(100vh - 1em);
+	bottom: 0;
 }
 .section1::before{
 	background: #CB2E1A;
