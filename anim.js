@@ -33,30 +33,33 @@ requestAnimationFrame(function anim(t) {
 	if (targTop > -1) scrEl.scrollTop = targTop;
 	
 	let dGlobal = scrEl.scrollTop - cont.scrollTop,
-	 dTop = dGlobal*dt*.01;
+	 dTop = dGlobal*dt*(targTop<10? .01 : .003);
 
 	cont.scrollTop+=dTop;
 	dTop = cont.scrollTop - lastTop;
 	lastTop = cont.scrollTop;
 
-	if (lastEl && (!dTop || !dGlobal || targTop > -1)) return;
+	if (lastEl && (!dTop || !dGlobal)) return;
 	
 	const halfH = innerHeight/2;
 
 	let current = sections.filter((i, el)=>{
-		const {top, bottom} = el.getBoundingClientRect();
+		const {top, bottom, height} = el.getBoundingClientRect();
 		//if (lastI*dTop <= i*dTop && (scrEl.scrollTop || !i))
+		if (!el.classList.contains('hidden')) {
+			const progress = Math.min(Math.max(0, -top / (height - innerHeight*1.5)), 1);
+			el.style.setProperty('--progress', progress);
+		}
 		if (!lastEl) return top>=0 && top<halfH || bottom<=innerHeight && bottom > halfH;
-		if (el==lastEl) return false;
+		if (el==lastEl || targTop > -1) return false;
 		if (dGlobal < 0) return top - dGlobal < treshold && bottom - dGlobal > treshold;
 		return top - dGlobal < innerHeight - treshold && bottom  - dGlobal > innerHeight - treshold;
 	});
+	if (!current[0] || targTop > -1) return;
 
-	if (!current[0]) return;
-	let {top, bottom} = current[0].getBoundingClientRect();
+	const {top, bottom} = (current[0] || lastEl).getBoundingClientRect();
+
 	targTop = scrEl.scrollTop = cont.scrollTop + (dGlobal >= 0? top : bottom - innerHeight*1.5);
-	console.log(dGlobal);
-
 	chAnim(current);
 });
 function chAnim(current){
@@ -65,7 +68,7 @@ function chAnim(current){
 	current.removeClass('hidden');
 	lastEl = current[0];
 
-	$('.chapter', current).fadeTo(0, 1).delay(700).fadeOut(700);
+	$('.chapter', current).fadeTo(0, 1).delay(800).fadeOut(900);
 	setTimeout(()=>{
 	//if (current.hasClass('chap-anim')) {
 			if (current.hasClass('hidden')) return;
