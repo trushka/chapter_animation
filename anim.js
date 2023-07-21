@@ -1,6 +1,6 @@
 const
  treshold=100,
- animTimeout=1500, //time for scroll blocking
+ animTimeout=2000, //time for scroll blocking in milliseconds
  $win = $(window),
  scrEl=$(document.scrollingElement)[0],
  cont=$('.content')[0],
@@ -49,7 +49,6 @@ requestAnimationFrame(function anim(t) {
 
 	let current = sections.filter((i, el)=>{
 		const {top, bottom, height} = el.getBoundingClientRect();
-		//if (lastI*dTop <= i*dTop && (scrEl.scrollTop || !i))
 		if (!el.classList.contains('hidden')) {
 			const progress = Math.min(Math.max(0, -top / (height - innerHeight*1.5)), 1);
 			el.style.setProperty('--progress', progress);
@@ -72,13 +71,9 @@ function chAnim(current){
 	current.removeClass('hidden');
 	lastEl = current[0];
 
-	//$('.chapter', current).fadeTo(0, 1).delay(800).fadeOut(900);
 	setTimeout(()=>{
-	//if (current.hasClass('chap-anim')) {
-			if (current.hasClass('hidden')) return;
-			lasttop = cont.scrollTop;
-			targTop = -1;
-	//};
-	}, 2000) // else scrEl.scrollTop = 0;
+		if (current.hasClass('hidden')) return;
+		lasttop = cont.scrollTop;
+		targTop = -1;
+	}, animTimeout) //
 }
-//$win.scroll(onScroll).scroll()
