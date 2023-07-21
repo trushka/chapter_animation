@@ -6,7 +6,7 @@ const
  cont=$('.content')[0],
  sections=$('.section').addClass('hidden ready');
 
-let lastGlobalTop, lastTop,
+let lastGlobalTop, lastTop=-1,
  lastEl, blocked, targTop=-1, lastI=-1, t0=0;
 
 $('nav').on('click', 'a[href^="#"]', function(e){
@@ -33,7 +33,7 @@ requestAnimationFrame(function anim(t) {
 	requestAnimationFrame (anim);
 	document.body.style.height = cont.scrollHeight+'px';
 
-	if (!lastTop) lastTop = lastGlobalTop = scrEl.scrollTop = cont.scrollTop;
+	if (lastTop<0) lastTop = lastGlobalTop = scrEl.scrollTop = cont.scrollTop;
 	if (targTop > -1) scrEl.scrollTop = targTop;
 	
 	let dGlobal = scrEl.scrollTop - cont.scrollTop,
