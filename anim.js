@@ -1,5 +1,6 @@
 const
  treshold=100,
+ animTimeout=1500, //time for scroll blocking
  $win = $(window),
  scrEl=$(document.scrollingElement)[0],
  cont=$('.content')[0],
@@ -68,13 +69,13 @@ function chAnim(current){
 	current.removeClass('hidden');
 	lastEl = current[0];
 
-	$('.chapter', current).fadeTo(0, 1).delay(800).fadeOut(900);
+	//$('.chapter', current).fadeTo(0, 1).delay(800).fadeOut(900);
 	setTimeout(()=>{
 	//if (current.hasClass('chap-anim')) {
 			if (current.hasClass('hidden')) return;
 			lasttop = cont.scrollTop;
 			targTop = -1;
 	//};
-	}, 1200) // else scrEl.scrollTop = 0;
+	}, 2000) // else scrEl.scrollTop = 0;
 }
 //$win.scroll(onScroll).scroll()
