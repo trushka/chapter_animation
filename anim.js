@@ -4,12 +4,12 @@ const
  $win = $(window),
  scrEl=$(document.scrollingElement)[0],
  cont=$('.content')[0],
- sections=$('.section').addClass('hidden');
+ sections=$('.section').addClass('hidden ready');
 
-let lastTop= cont.scrollTop, lastGlobalTop = scrEl.scrollTop,
+let lastGlobalTop, lastTop,
  lastEl, blocked, targTop=-1, lastI=-1, t0=0;
 
-console.log($('nav').on('click', 'a[href^="#"]', function(e){
+$('nav').on('click', 'a[href^="#"]', function(e){
 	console.log(this);
 	$(cont).on('scroll', function scr(e){
 		if (e.target != cont) return;
@@ -25,8 +25,7 @@ console.log($('nav').on('click', 'a[href^="#"]', function(e){
 		targTop = newTop;
 		chAnim(current);
 	});
-}).find('a[href="'+location.hash+'"]').click());
-
+})
 
 requestAnimationFrame(function anim(t) {
 	const dt=Math.min(t-t0, 50);
@@ -34,6 +33,7 @@ requestAnimationFrame(function anim(t) {
 	requestAnimationFrame (anim);
 	document.body.style.height = cont.scrollHeight+'px';
 
+	if (!lastTop) lastTop = lastGlobalTop = scrEl.scrollTop = cont.scrollTop;
 	if (targTop > -1) scrEl.scrollTop = targTop;
 	
 	let dGlobal = scrEl.scrollTop - cont.scrollTop,
@@ -53,7 +53,7 @@ requestAnimationFrame(function anim(t) {
 			const progress = Math.min(Math.max(0, -top / (height - innerHeight*1.5)), 1);
 			el.style.setProperty('--progress', progress);
 		}
-		if (!lastEl) return top>=0 && top<halfH || bottom<=innerHeight && bottom > halfH;
+		if (!lastEl) return top<halfH && bottom > halfH;
 		if (el==lastEl || targTop > -1) return false;
 		if (dGlobal < 0) return top - dGlobal < treshold && bottom - dGlobal > treshold;
 		return top - dGlobal < innerHeight - treshold && bottom  - dGlobal > innerHeight - treshold;

@@ -108,7 +108,7 @@ h2{
 	z-index: 4;
 	pointer-events: none;
 }
-.section:not(.hidden) .chapter{
+.section.ready:not(.hidden) .chapter{
 	opacity: 1;
 	visibility: visible;
 	animation: 1s chapter 1.3s ease-in-out forwards;
