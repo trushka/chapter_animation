@@ -8,7 +8,9 @@ const
 
 let lastTop= cont.scrollTop, lastGlobalTop = scrEl.scrollTop,
  lastEl, blocked, targTop=-1, lastI=-1, t0=0;
-$('nav').on('click', 'a[href^="#"]', function(e){
+
+console.log($('nav').on('click', 'a[href^="#"]', function(e){
+	console.log(this);
 	$(cont).on('scroll', function scr(e){
 		if (e.target != cont) return;
 		$(cont).off('scroll', scr);
@@ -23,7 +25,8 @@ $('nav').on('click', 'a[href^="#"]', function(e){
 		targTop = newTop;
 		chAnim(current);
 	});
-})
+}).find('a[href="'+location.hash+'"]').click());
+
 
 requestAnimationFrame(function anim(t) {
 	const dt=Math.min(t-t0, 50);
