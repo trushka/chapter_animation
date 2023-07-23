@@ -1,79 +1,76 @@
 const
  treshold=100,
- animTimeout=2000, //time for scroll blocking in milliseconds
+ animTimeout=1000, //time for scroll blocking in milliseconds
  $win = $(window),
- scrEl=$(document.scrollingElement)[0],
- cont=$('.content')[0],
+ $cont=$(document.scrollingElement), cont = $cont[0],
  sections=$('.section').addClass('hidden ready');
 
-let lastGlobalTop, lastTop=-1,
+let lastGlobalTop, lastTop=-1, lastTimer,
  lastEl, blocked, targTop=-1, lastI=-1, t0=0;
-
-$('nav').on('click', 'a[href^="#"]', function(e){
-	console.log(this);
-	$(cont).on('scroll', function scr(e){
-		if (e.target != cont) return;
-		$(cont).off('scroll', scr);
-		if (cont.scrollTop == lastTop) return;
-		const newTop = cont.scrollTop;
-		cont.scrollTop = lastTop;
-		scrEl.scrollTop = newTop;
-
-		const current = $(location.hash).not(lastEl)
-		console.log(e.target == cont);
-		if (!current[0]) return;
-		targTop = newTop;
-		chAnim(current);
-	});
-})
 
 requestAnimationFrame(function anim(t) {
 	const dt=Math.min(t-t0, 50);
 	t0=t;
 	requestAnimationFrame (anim);
-	document.body.style.height = cont.scrollHeight+'px';
 
-	if (lastTop<0) lastTop = lastGlobalTop = scrEl.scrollTop = cont.scrollTop;
-	if (targTop > -1) scrEl.scrollTop = targTop;
+	//if (lastTop<0) lastTop = cont.scrollTop;
+	//if (targTop > -1) cont.scrollTop = targTop;
 	
-	let dGlobal = scrEl.scrollTop - cont.scrollTop,
+	let dGlobal = cont.scrollTop - lastTop,
 	 dTop = dGlobal*dt*(targTop<10? .01 : .003);
 
-	cont.scrollTop+=dTop;
-	dTop = cont.scrollTop - lastTop;
 	lastTop = cont.scrollTop;
 
-	if (lastEl && (!dTop || !dGlobal)) return;
+	if (lastEl && !dGlobal) return;
 	
 	const halfH = innerHeight/2;
 
 	let current = sections.filter((i, el)=>{
 		const {top, bottom, height} = el.getBoundingClientRect();
-		if (!el.classList.contains('hidden')) {
-			const progress = Math.min(Math.max(0, -top / (height - innerHeight*1.5)), 1);
-			el.style.setProperty('--progress', progress);
-		}
 		if (!lastEl) return top<halfH && bottom > halfH;
-		if (el==lastEl || targTop > -1) return false;
-		if (dGlobal < 0) return top - dGlobal < treshold && bottom - dGlobal > treshold;
-		return top - dGlobal < innerHeight - treshold && bottom  - dGlobal > innerHeight - treshold;
-	});
-	if (!current[0] || targTop > -1) return;
+		if (el==lastEl) return false; // || targTop > -1
+		if (dGlobal < 0) return top < treshold && bottom > treshold;
+		return top < innerHeight - treshold && bottom > innerHeight - treshold;
+	})[0];
+	if (!current) return; // || targTop > -1
 
-	const {top, bottom} = (current[0] || lastEl).getBoundingClientRect();
+	const {top, bottom} = current.getBoundingClientRect();
 
-	targTop = scrEl.scrollTop = cont.scrollTop + (dGlobal >= 0? top : bottom - innerHeight*1.5);
-	chAnim(current);
-});
-function chAnim(current){
+	targTop = cont.scrollTop + (dGlobal >= 0? top : bottom - innerHeight);
 
 	sections.addClass('hidden');
-	current.removeClass('hidden');
-	lastEl = current[0];
+	current.classList.remove('hidden');
+	lastEl = current;
+	clearTimeout(lastTimer);
+	//$cont.stop();
 
-	setTimeout(()=>{
-		if (current.hasClass('hidden')) return;
-		lasttop = cont.scrollTop;
+	if (current.classList.contains('section0')) cont.scrollTop = 0
+
+	else lastTimer = setTimeout(()=>{
+		if (current.classList.contains('hidden')) return;
+		lasttop = cont.scrollTop = targTop;
 		targTop = -1;
 	}, animTimeout) //
+})
+
+gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
+
+function titleAnim() {
+	const gsapTitle = gsap.utils.toArray('.section__wrapp');
+	gsapTitle.forEach((gsTl) => {
+    let titleAnim = $(gsTl).find('h2');
+		let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: gsTl,
+        start: "top center",
+        // end: "+=1500",
+        // markers: true,
+        scrub: 0.5,
+        pin: true,
+        refreshPriority: 1
+      }
+    });
+    tl.to(titleAnim, 0.2, { x: 50, ease: "none" })
+	});
 }
+titleAnim();
