@@ -1,6 +1,5 @@
 body{
 	margin: 0;
-	overflow-x: hidden;
 }
 
 nav{
@@ -34,8 +33,9 @@ nav ul li:not(:first-child){
 
 .section{
 	/* position: relative; */
+	overflow-x: hidden;
 	max-width: 100%;
-	height: auto;
+	height: 300vh;
 	/* padding-top: 100px; */
 	/*overflow: hidden;*/
 	outline: 1px solid;
@@ -54,7 +54,7 @@ nav ul li:not(:first-child){
 	height: 120%;
 }
 .section0{
-	height:100vh;
+	min-height:100vh;
 	transition: .2s transform, .3s opacity;
  }
 .section0.hidden {

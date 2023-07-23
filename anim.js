@@ -63,14 +63,14 @@ function titleAnim() {
       scrollTrigger: {
         trigger: gsTl,
         start: "top center",
-        // end: "+=1500",
+         // end: "+=1500",
         // markers: true,
         scrub: 0.5,
         pin: true,
         refreshPriority: 1
       }
     });
-    tl.to(titleAnim, 0.2, { x: 50, ease: "none" })
+    tl.to(titleAnim, { x: 50, ease: "none" })
 	});
 }
 titleAnim();
