@@ -10,15 +10,6 @@ nav{
 	left: 0;
 	z-index: 9;
 }
-.content{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	overflow: hidden;
-}
-
 nav ul{
 	display: flex;
 }
@@ -51,7 +42,7 @@ nav ul li:not(:first-child){
 .section0{
 	min-height:100vh;
 	transition: .2s transform, .3s opacity;
- }
+}
 .section0.hidden {
 	transition: 0s transform .4s, .3s opacity;
 	transform: translateY(-200px);
@@ -70,6 +61,7 @@ h1{
 	margin:0;
 	font-size: 100px;
 	text-transform: uppercase;
+	overflow: hidden;
 }
 h2{
 	margin: 0;
@@ -78,6 +70,7 @@ h2{
 }
 .section__wrapp h2{
 	margin-top: calc(50vh - .5em);
+	width: fit-content;
 }
 .section1::before{
 	background: #CB2E1A;
@@ -108,6 +101,7 @@ h2{
 	background: #000;
 	z-index: 4;
 	pointer-events: none;
+	overflow: hidden;
 }
 .section.ready:not(.hidden) .chapter{
 	opacity: 1;
