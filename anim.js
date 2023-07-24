@@ -30,13 +30,13 @@ requestAnimationFrame(function anim(t) {
 	
 	const halfH = innerHeight/2;
 
-	let current = targEl || sections.filter((i, el)=>{
+	let $current = targEl || sections.filter((i, el)=>{
 		const {top, bottom, height} = el.getBoundingClientRect();
 		if (!lastEl) return top<halfH && bottom > halfH;
 		if (el==lastEl) return false; // || targTop > -1
 		if (dGlobal < 0) return top < treshold && bottom > treshold;
 		return top < innerHeight - treshold && bottom > innerHeight - treshold;
-	})[0];
+	}), current=$current[0];
 	if (!current) return; // || targTop > -1
 
 	const {top, bottom} = current.getBoundingClientRect();
@@ -50,13 +50,14 @@ requestAnimationFrame(function anim(t) {
 	targEl = null;
 	//$cont.stop();
 
-	if (current.classList.contains('section0')) cont.scrollTop = 0
+	if (current.classList.contains('section0')) cont.scrollTop = targTop = 0;
 
-	else lastTimer = setTimeout(()=>{
-		if (current.classList.contains('hidden')) return;
-		lasttop = cont.scrollTop = targTop;
+	lastTimer = setTimeout(()=>{
+		if ($current.hasClass('hidden')) return;
+		if (targTop) lasttop = cont.scrollTop = targTop;
+		document.body.style.background = $current.css('--bg');
 		targTop = -1;
-	}, animTimeout) //
+	}, animTimeout) 
 })
 
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
